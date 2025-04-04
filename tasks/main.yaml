@@ -11,7 +11,7 @@
     gather_subset:
       - devices
     provider:
-      server: f5_cred.f5_user
+      server: "{{ f5_cred.f5_hosts.split(',') | first }}"
       user: f5_cred.f5_user
       password: f5_cred.f5_password
   register: result
