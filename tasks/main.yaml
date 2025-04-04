@@ -1,0 +1,21 @@
+---
+- name: Validate f5 credential fields
+  assert:
+    that:
+      - (f5_cred.f5_user | length) > 0
+      - (f5_cred.f5_password | length) > 0
+      - (f5_cred.f5_hosts | split(',') | length) == 2
+
+- name: Device info
+  bigip_device_info:
+    gather_subset:
+      - devices
+    provider:
+      server: f5_cred.f5_user
+      user: f5_cred.f5_user
+      password: f5_cred.f5_password
+  register: result
+
+- name: Show registered results
+  debug:
+    msg: "{{ result }}"
