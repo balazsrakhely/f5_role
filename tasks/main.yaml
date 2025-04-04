@@ -6,6 +6,10 @@
       - (f5_cred.f5_password | length) > 0
       - (f5_cred.f5_hosts | split(',') | length) == 2
 
+- name: Display first host
+  debug:
+    msg: "{{ f5_cred.f5_hosts.split(',') | first }}"
+
 - name: Device info
   bigip_device_info:
     gather_subset:
