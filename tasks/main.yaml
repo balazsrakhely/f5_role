@@ -19,6 +19,9 @@
       user: f5_cred.f5_user
       password: f5_cred.f5_password
       server_port: 443
+      no_f5_teem: true
+      transport: rest
+      validate_certs: true
   register: result
 
 - name: Show registered results
