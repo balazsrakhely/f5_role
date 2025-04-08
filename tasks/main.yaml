@@ -21,7 +21,7 @@
       server_port: 443
       no_f5_teem: true
       transport: rest
-      validate_certs: false
+      validate_certs: true
   register: result
 
 - name: Show registered results
