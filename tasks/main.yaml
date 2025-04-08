@@ -16,8 +16,8 @@
       - devices
     provider:
       server: "{{ f5_cred.f5_hosts.split(',') | first }}"
-      user: f5_cred.f5_user
-      password: f5_cred.f5_password
+      user: "{{ f5_cred.f5_user }}"
+      password: "{{ f5_cred.f5_password }}"
       server_port: 443
       no_f5_teem: true
       transport: rest
