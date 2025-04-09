@@ -9,6 +9,9 @@
       - (f5_cred.f5_user | length) > 0
       - (f5_cred.f5_password | length) > 0
       - (f5_cred.f5_hosts | split(',') | length) == 2
+      - (vs_name | length) > 0
+      - (protocol | length) > 0
+      - (port | length) > 0
 
 - name: Device info
   bigip_device_info:
@@ -18,10 +21,10 @@
       server: "{{ f5_cred.f5_hosts.split(',') | first }}"
       user: "{{ f5_cred.f5_user }}"
       password: "{{ f5_cred.f5_password }}"
-      server_port: 443
-      no_f5_teem: true
-      transport: rest
-      validate_certs: false
+      server_port: "{{ provider_server_port }}"
+      no_f5_teem: "{{ provider_omit_telemetry }}"
+      transport: "{{ provider_transport }}"
+      validate_certs: "{{ provider_validate_certs }}"
   register: _result
 
 - name: Show registered results
@@ -38,3 +41,22 @@
 - name: Display active device
   debug:
     msg: "The active device is {{ _active_device_address }}"
+
+- name: Create pool
+  bigip_pool:
+    state: present
+    name: "{{ vs_name }}_{{ protocol }}{{ port }}_pool"
+    partition: "{{ partition }}"
+    lb_method: "{{ lb_algo }}"
+    slow_ramp_time: "{{ pool_slow_ramp_time }}"
+    monitor_type: and_list
+    monitors:
+      - "{{ protocol }}"
+    provider:
+      server: "{{ _active_device_address }}"
+      user: "{{ f5_cred.f5_user }}"
+      password: "{{ f5_cred.f5_password }}"
+      server_port: "{{ provider_server_port }}"
+      no_f5_teem: "{{ provider_omit_telemetry }}"
+      transport: "{{ provider_transport }}"
+      validate_certs: "{{ provider_validate_certs }}"
