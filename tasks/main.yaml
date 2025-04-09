@@ -62,7 +62,7 @@
     partition: "{{ partition }}"
     lb_method: "{{ lb_algo }}"
     slow_ramp_time: "{{ pool_slow_ramp_time }}"
-    monitor_type: and_list
+    monitor_type: "{{ 'and_list' if _pool_health_monitor | length > 0 else omit }}"
     monitors: "{{ _pool_health_monitor }}"
     provider:
       server: "{{ _active_device_address }}"
