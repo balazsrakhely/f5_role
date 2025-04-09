@@ -17,11 +17,16 @@
 - name: Create nodes
   ansible.builtin.include_tasks:
     file: create_nodes.yaml
-  when: "nodes_to_create is defined"
+  when: "nodes_to_create is defined and nodes_to_create | list | length > 0"
 
 - name: Create pool
   ansible.builtin.include_tasks:
     file: create_pool.yaml
+
+- name: Add nodes to pool
+  ansible.builtin.include_tasks:
+    file: add_nodes_to_pool.yaml
+  when: "_pool_result.name is defined and nodes_to_create is defined and nodes_to_create | list | length > 0"
 
 - name: Create virtual server
   ansible.builtin.include_tasks:

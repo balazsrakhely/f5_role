@@ -13,7 +13,7 @@
       validate_certs: "{{ provider_validate_certs }}"
   register: _device_result
 
-- name: Show registered results
+- name: Show retrieved devices
   debug:
     msg: "{{ _device_result }}"
 

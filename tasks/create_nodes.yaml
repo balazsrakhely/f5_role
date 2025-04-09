@@ -27,3 +27,8 @@
       transport: "{{ provider_transport }}"
       validate_certs: "{{ provider_validate_certs }}"
   loop: "{{ nodes_to_create }}"
+  register: _node_results
+
+- name: Display created nodes
+  debug:
+    msg: "{{ _node_results }}"
