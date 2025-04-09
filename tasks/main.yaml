@@ -48,6 +48,13 @@
   debug:
     msg: "The active device is {{ _active_device_address }}"
 
+- name: Convert pool health monitor to correct format
+  ansible.builtin.set_fact:
+    _pool_health_monitor: "{{ _monitor }}"
+  vars:
+    _tmp_monitor: "{{ pool_health_monitor | default('') }}"
+    _monitor: "{{ _tmp_monitor.split(',') if _tmp_monitor | length > 0 else [] }}"
+
 - name: Create pool
   bigip_pool:
     state: present
@@ -56,7 +63,7 @@
     lb_method: "{{ lb_algo }}"
     slow_ramp_time: "{{ pool_slow_ramp_time }}"
     monitor_type: and_list
-    monitors: "{{ pool_health_monitor | default('') | length > 0 | ternary(pool_health_monitor.split(','), []) }}"
+    monitors: "{{ _pool_health_monitor }}"
     provider:
       server: "{{ _active_device_address }}"
       user: "{{ f5_cred.f5_user }}"
