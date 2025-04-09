@@ -16,9 +16,6 @@
       - vs_name is defined
       - vs_protocol is defined
       - vs_port is defined
-      - vs_name is string
-      - vs_protocol is string
-      - vs_port is int
 
 - name: Device info
   bigip_device_info:
