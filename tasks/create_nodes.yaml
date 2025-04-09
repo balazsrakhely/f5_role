@@ -2,18 +2,16 @@
 - name: Validate node params
   assert:
     that:
-      - node.name is defined
-      - node.name is string
-      - node.address is defined
-      - node.address is string
+      - item.name is defined
+      - item.name is string
+      - item.address is defined
+      - item.address is string
   loop: "{{ nodes_to_create }}"
-  loop_control:
-    label: "{{ node }}"
 
 - name: Add node
   bigip_node:
-    host: "{{ node.address }}"
-    name: "{{ node.name }}"
+    host: "{{ item.address }}"
+    name: "{{ item.name }}"
     provider:
       server: "{{ _active_device_address }}"
       user: "{{ f5_cred.f5_user }}"
@@ -23,5 +21,3 @@
       transport: "{{ provider_transport }}"
       validate_certs: "{{ provider_validate_certs }}"
   loop: "{{ nodes_to_create }}"
-  loop_control:
-    label: "{{ node }}"
