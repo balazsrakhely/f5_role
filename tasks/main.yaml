@@ -17,6 +17,7 @@
       - vs_address is defined
       - vs_protocol is defined
       - vs_port is defined
+      - vs_vlans is defined
 
 - name: Device info
   bigip_device_info:
@@ -68,7 +69,7 @@
 
 - name: Convert VLAN input to correct format
   set_fact:
-    _vs_vlans: "{{ (vs_vlans | default(omit)) | split(',') }}"
+    _vs_vlans: "{{ (vs_vlans | split(',') }}"
 
 - name: Create virtual server
   bigip_virtual_server:
