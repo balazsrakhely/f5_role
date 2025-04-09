@@ -1,0 +1,29 @@
+---
+- name: Device info
+  bigip_device_info:
+    gather_subset:
+      - devices
+    provider:
+      server: "{{ f5_cred.f5_hosts.split(',') | first }}"
+      user: "{{ f5_cred.f5_user }}"
+      password: "{{ f5_cred.f5_password }}"
+      server_port: "{{ provider_server_port }}"
+      no_f5_teem: "{{ provider_omit_telemetry }}"
+      transport: "{{ provider_transport }}"
+      validate_certs: "{{ provider_validate_certs }}"
+  register: _device_result
+
+- name: Show registered results
+  debug:
+    msg: "{{ _device_result }}"
+
+- name: Get active device
+  ansible.builtin.set_fact:
+    _active_device: "{{ _device_lookup_result.device }}"
+    _active_device_address: "{{ _device_lookup_result.address }}"
+  vars:
+    _device_lookup_result: "{{ lookup('get_active_device', f5_cred.f5_hosts, _device_result.devices, wantlist=True) }}"
+
+- name: Display active device
+  debug:
+    msg: "The active device is {{ _active_device_address }}"

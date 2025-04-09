@@ -1,0 +1,30 @@
+---
+- name: Convert pool health monitor to correct format
+  ansible.builtin.set_fact:
+    _pool_health_monitor: "{{ _monitor }}"
+  vars:
+    _tmp_monitor: "{{ pool_health_monitor | default('') }}"
+    _monitor: "{{ _tmp_monitor.split(',') if _tmp_monitor | length > 0 else [] }}"
+
+- name: Create pool
+  bigip_pool:
+    state: present
+    name: "{{ vs_name }}_{{ vs_protocol }}{{ vs_port }}_pool"
+    partition: "{{ partition }}"
+    lb_method: "{{ lb_algo }}"
+    slow_ramp_time: "{{ pool_slow_ramp_time }}"
+    monitor_type: "{{ 'and_list' if _pool_health_monitor | length > 0 else omit }}"
+    monitors: "{{ _pool_health_monitor }}"
+    provider:
+      server: "{{ _active_device_address }}"
+      user: "{{ f5_cred.f5_user }}"
+      password: "{{ f5_cred.f5_password }}"
+      server_port: "{{ provider_server_port }}"
+      no_f5_teem: "{{ provider_omit_telemetry }}"
+      transport: "{{ provider_transport }}"
+      validate_certs: "{{ provider_validate_certs }}"
+  register: _pool_result
+
+- name: Display created pool
+  debug:
+    msg: "{{ _pool_result }}"
