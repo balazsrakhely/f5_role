@@ -30,8 +30,8 @@
 
 - name: Get active device
   ansible.builtin.set_fact:
-    _active_device: _device_lookup_result.device
-    _active_device_address: _device_lookup_result.address
+    _active_device: "{{ _device_lookup_result.device }}"
+    _active_device_address: "{{ _device_lookup_result.address }}"
   vars:
     _device_lookup_result: "{{ lookup('get_active_device', f5_cred.f5_hosts, _result.devices, wantlist=True) }}"
 
