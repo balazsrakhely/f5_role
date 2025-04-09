@@ -8,10 +8,16 @@
       - item.address is string
   loop: "{{ nodes_to_create }}"
 
+- name: Validate other params
+  assert:
+    that:
+      - partition is defined
+
 - name: Add node
   bigip_node:
     host: "{{ item.address }}"
     name: "{{ item.name }}"
+    partition: "{{ partition }}"
     provider:
       server: "{{ _active_device_address }}"
       user: "{{ f5_cred.f5_user }}"
