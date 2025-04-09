@@ -14,6 +14,11 @@
   ansible.builtin.include_tasks:
     file: get_active_device.yaml
 
+- name: Create nodes
+  ansible.builtin.include_tasks:
+    file: create_nodes.yaml
+  when: "nodes_to_create is defined"
+
 - name: Create pool
   ansible.builtin.include_tasks:
     file: create_pool.yaml
