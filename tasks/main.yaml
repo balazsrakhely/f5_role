@@ -10,8 +10,8 @@
       - (f5_cred.f5_password | length) > 0
       - (f5_cred.f5_hosts | split(',') | length) == 2
       - (vs_name | length) > 0
-      - (protocol | length) > 0
-      - (port | length) > 0
+      - (vs_protocol | length) > 0
+      - (vs_port | length) > 0
 
 - name: Device info
   bigip_device_info:
@@ -45,7 +45,7 @@
 - name: Create pool
   bigip_pool:
     state: present
-    name: "{{ vs_name }}_{{ protocol }}{{ port }}_pool"
+    name: "{{ vs_name }}_{{ vs_protocol }}{{ vs_port }}_pool"
     partition: "{{ partition }}"
     lb_method: "{{ lb_algo }}"
     slow_ramp_time: "{{ pool_slow_ramp_time }}"
