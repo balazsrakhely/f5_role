@@ -57,7 +57,7 @@
     slow_ramp_time: "{{ pool_slow_ramp_time }}"
     monitor_type: and_list
     monitors:
-      - "{{ vs_protocol }}"
+      - "/Common/{{ vs_protocol }}"
     provider:
       server: "{{ _active_device_address }}"
       user: "{{ f5_cred.f5_user }}"
