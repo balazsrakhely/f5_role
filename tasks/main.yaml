@@ -56,7 +56,7 @@
     lb_method: "{{ lb_algo }}"
     slow_ramp_time: "{{ pool_slow_ramp_time }}"
     monitor_type: and_list
-    monitors: "{{ pool_health_monitor | default('') | length > 0 | ternary(mystring.split(','), []) }}"
+    monitors: "{{ pool_health_monitor | default('') | length > 0 | ternary(pool_health_monitor.split(','), []) }}"
     provider:
       server: "{{ _active_device_address }}"
       user: "{{ f5_cred.f5_user }}"
