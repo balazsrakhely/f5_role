@@ -64,3 +64,26 @@
       no_f5_teem: "{{ provider_omit_telemetry }}"
       transport: "{{ provider_transport }}"
       validate_certs: "{{ provider_validate_certs }}"
+
+- name: Convert VLAN input to correct format
+  set_fact:
+    _vs_vlans: "{{ (vs_vlans | default('')) | split(',') }}"
+
+- name: Create virtual server
+  bigip_virtual_server:
+    state: present
+    partition: "{{ partition }}"
+    name: "{{ vs_name }}_{{ vs_protocol }}{{ vs_port }}_vs"
+    destination: "{{ vs_address }}"
+    port: "{{ vs_port }}"
+    ip_protocol: "{{ vs_protocol }}"
+    enabled_vlans: "{{ _vs_vlans }}"
+    snat: Automap
+    provider:
+      server: "{{ _active_device_address }}"
+      user: "{{ f5_cred.f5_user }}"
+      password: "{{ f5_cred.f5_password }}"
+      server_port: "{{ provider_server_port }}"
+      no_f5_teem: "{{ provider_omit_telemetry }}"
+      transport: "{{ provider_transport }}"
+      validate_certs: "{{ provider_validate_certs }}"
