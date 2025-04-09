@@ -1,4 +1,14 @@
 ---
+- name: Validate required parameters
+  assert:
+    that:
+      - pool_name is defined
+      - pool_protocol is defined
+      - pool_port is defined
+      - partition is defined
+      - lb_algo is defined
+      - pool_slow_ramp_time is defined
+
 - name: Convert pool health monitor to correct format
   ansible.builtin.set_fact:
     _pool_health_monitor: "{{ _monitor }}"
@@ -9,7 +19,7 @@
 - name: Create pool
   bigip_pool:
     state: present
-    name: "{{ vs_name }}_{{ vs_protocol }}{{ vs_port }}_pool"
+    name: "{{ pool_name }}_{{ pool_protocol }}{{ pool_port }}_pool"
     partition: "{{ partition }}"
     lb_method: "{{ lb_algo }}"
     slow_ramp_time: "{{ pool_slow_ramp_time }}"
