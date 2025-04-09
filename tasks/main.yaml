@@ -1,14 +1,14 @@
 ---
+- name: Display input hosts
+  debug:
+    msg: "{{ f5_cred.f5_hosts.split(',') }}"
+  
 - name: Validate f5 credential fields
   assert:
     that:
       - (f5_cred.f5_user | length) > 0
       - (f5_cred.f5_password | length) > 0
       - (f5_cred.f5_hosts | split(',') | length) == 2
-
-- name: Display first host
-  debug:
-    msg: "{{ f5_cred.f5_hosts.split(',') | first }}"
 
 - name: Device info
   bigip_device_info:
@@ -22,8 +22,19 @@
       no_f5_teem: true
       transport: rest
       validate_certs: false
-  register: result
+  register: _result
 
 - name: Show registered results
   debug:
-    msg: "{{ result }}"
+    msg: "{{ _result }}"
+
+- name: Get active device
+  ansible.builtin.set_fact:
+    _active_device: _device_lookup_result.device
+    _active_device_address: _device_lookup_result.address
+  vars:
+    _device_lookup_result: "{{ lookup('get_active_device', f5_cred.f5_hosts, _result.devices, wantlist=True) }}"
+
+- name: Display active device
+  debug:
+    msg: "The active device is {{ _active_device_address }}"
