@@ -69,7 +69,7 @@
 
 - name: Convert VLAN input to correct format
   set_fact:
-    _vs_vlans: "{{ (vs_vlans | split(',') }}"
+    _vs_vlans: "{{ (vs_vlans | split(',')) }}"
 
 - name: Create virtual server
   bigip_virtual_server:
