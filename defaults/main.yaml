@@ -1,8 +1,8 @@
 ---
-provider_server_port=443
-provider_omit_telemetry=true
-provider_transport=rest
-provider_validate_certs=false
-pool_slow_ramp_time=120
-lb_algo=round-robin
-partition=Common
+provider_server_port: 443
+provider_omit_telemetry: true
+provider_transport: rest
+provider_validate_certs: false
+pool_slow_ramp_time: 120
+lb_algo: round-robin
+partition: Common
