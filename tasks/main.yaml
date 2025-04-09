@@ -6,12 +6,19 @@
 - name: Validate f5 credential fields
   assert:
     that:
-      - (f5_cred.f5_user | length) > 0
-      - (f5_cred.f5_password | length) > 0
+      - f5_cred.f5_user is defined
+      - f5_cred.f5_password is defined
       - (f5_cred.f5_hosts | split(',') | length) == 2
-      - (vs_name | length) > 0
-      - (vs_protocol | length) > 0
-      - (vs_port | length) > 0
+
+- name: Validate vs required parameters
+  assert:
+    that:
+      - vs_name is defined
+      - vs_protocol is defined
+      - vs_port is defined
+      - vs_name is string
+      - vs_protocol is string
+      - vs_port is int
 
 - name: Device info
   bigip_device_info:
@@ -51,7 +58,7 @@
     slow_ramp_time: "{{ pool_slow_ramp_time }}"
     monitor_type: and_list
     monitors:
-      - "{{ protocol }}"
+      - "{{ vs_protocol }}"
     provider:
       server: "{{ _active_device_address }}"
       user: "{{ f5_cred.f5_user }}"
