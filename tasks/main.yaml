@@ -31,18 +31,18 @@
       no_f5_teem: "{{ provider_omit_telemetry }}"
       transport: "{{ provider_transport }}"
       validate_certs: "{{ provider_validate_certs }}"
-  register: _result
+  register: _device_result
 
 - name: Show registered results
   debug:
-    msg: "{{ _result }}"
+    msg: "{{ _device_result }}"
 
 - name: Get active device
   ansible.builtin.set_fact:
     _active_device: "{{ _device_lookup_result.device }}"
     _active_device_address: "{{ _device_lookup_result.address }}"
   vars:
-    _device_lookup_result: "{{ lookup('get_active_device', f5_cred.f5_hosts, _result.devices, wantlist=True) }}"
+    _device_lookup_result: "{{ lookup('get_active_device', f5_cred.f5_hosts, _device_result.devices, wantlist=True) }}"
 
 - name: Display active device
   debug:
@@ -56,8 +56,7 @@
     lb_method: "{{ lb_algo }}"
     slow_ramp_time: "{{ pool_slow_ramp_time }}"
     monitor_type: and_list
-    monitors:
-      - "/Common/{{ vs_protocol }}"
+    monitors: "{{ pool_health_monitor | default('') | length > 0 | ternary(mystring.split(','), []) }}"
     provider:
       server: "{{ _active_device_address }}"
       user: "{{ f5_cred.f5_user }}"
@@ -66,10 +65,11 @@
       no_f5_teem: "{{ provider_omit_telemetry }}"
       transport: "{{ provider_transport }}"
       validate_certs: "{{ provider_validate_certs }}"
+  register: _pool_result
 
-- name: Convert VLAN input to correct format
-  set_fact:
-    _vs_vlans: "{{ (vs_vlans | split(',')) }}"
+- name: Display created pool
+  debug:
+    msg: "{{ _pool_result }}"
 
 - name: Create virtual server
   bigip_virtual_server:
@@ -79,7 +79,7 @@
     destination: "{{ vs_address }}"
     port: "{{ vs_port }}"
     ip_protocol: "{{ vs_protocol }}"
-    enabled_vlans: "{{ _vs_vlans }}"
+    enabled_vlans: "{{ (vs_vlans | split(',')) }}"
     snat: Automap
     provider:
       server: "{{ _active_device_address }}"
@@ -89,3 +89,8 @@
       no_f5_teem: "{{ provider_omit_telemetry }}"
       transport: "{{ provider_transport }}"
       validate_certs: "{{ provider_validate_certs }}"
+  register: _vs_result
+
+- name: Display created pool
+  debug:
+    msg: "{{ _vs_result }}"
