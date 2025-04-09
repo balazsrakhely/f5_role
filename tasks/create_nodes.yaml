@@ -29,6 +29,10 @@
   loop: "{{ nodes_to_create }}"
   register: _node_results
 
-- name: Display created nodes
+- name: Set fact for successfully created nodes
+  set_fact:
+    _successfully_created_nodes: "{{ _node_results.results | selectattr('failed', 'equalto', false) | map(attribute='item') | list }}"
+
+- name: Display successfully created nodes
   debug:
-    msg: "{{ _node_results }}"
+    msg: "{{ _successfully_created_nodes }}"

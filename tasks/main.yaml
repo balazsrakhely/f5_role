@@ -26,7 +26,7 @@
 - name: Add nodes to pool
   ansible.builtin.include_tasks:
     file: add_nodes_to_pool.yaml
-  when: "_pool_result.name is defined and nodes_to_create is defined and nodes_to_create | list | length > 0"
+  when: "_pool_result.name is defined and _successfully_created_nodes is defined and _successfully_created_nodes | list | length > 0"
 
 - name: Create virtual server
   ansible.builtin.include_tasks:
