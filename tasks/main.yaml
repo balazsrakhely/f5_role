@@ -88,6 +88,7 @@
     ip_protocol: "{{ vs_protocol }}"
     enabled_vlans: "{{ (vs_vlans | split(',')) }}"
     snat: Automap
+    pool: "{{ _pool_result.name }}"
     provider:
       server: "{{ _active_device_address }}"
       user: "{{ f5_cred.f5_user }}"
