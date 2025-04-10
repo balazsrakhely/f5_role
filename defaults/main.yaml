@@ -8,3 +8,5 @@ lb_algo: round-robin
 partition: Common
 vs_protocol: tcp
 vs_port: 443
+pool_protocol: tcp
+pool_port: 443
