@@ -2,10 +2,6 @@
 - name: Validate required parameters
   assert:
     that:
-      - pool_name is defined
-      - pool_protocol is defined
-      - pool_port is defined
-      - partition is defined
       - lb_algo is defined
       - slow_ramp_time is defined
 
@@ -19,7 +15,7 @@
 - name: Create pool
   bigip_pool:
     state: present
-    name: "{{ pool_name }}_{{ pool_protocol }}{{ pool_port }}_pool"
+    name: "{{ pool_name }}"
     partition: "{{ partition }}"
     lb_method: "{{ lb_algo }}"
     slow_ramp_time: "{{ slow_ramp_time }}"
@@ -30,11 +26,11 @@
       user: "{{ f5_cred.f5_user }}"
       password: "{{ f5_cred.f5_password }}"
       server_port: "{{ provider_server_port }}"
-      no_f5_teem: "{{ provider_omit_telemetry }}"
-      transport: "{{ provider_transport }}"
+      no_f5_teem: true
+      transport: rest
       validate_certs: "{{ provider_validate_certs }}"
-  register: _pool_result
+  register: _create_pool_result
 
-- name: Display created pool
+- name: Display result of create pool operation
   debug:
-    msg: "{{ _pool_result }}"
+    msg: "{{ _create_pool_result }}"

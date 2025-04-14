@@ -10,24 +10,34 @@
       - f5_cred.f5_password is defined
       - (f5_cred.f5_hosts | split(',') | length) == 2
 
+- name: Check if pool_name and partition are provided
+  assert:
+    that:
+      - pool_name is defined and pool_name | length > 0
+      - partition is defined and partition | length > 0
+
+- name: Validate pool operation
+  assert:
+    that:
+      - pool_operation is defined 
+      - pool_operation in ['create', 'update', 'remove']
+    fail_msg: "pool_operation must be one of: create, update, or remove"
+      
 - name: Get active device
   ansible.builtin.include_tasks:
     file: get_active_device.yaml
 
-- name: Create nodes
-  ansible.builtin.include_tasks:
-    file: create_nodes.yaml
-  when: "nodes_to_create is defined and nodes_to_create | list | length > 0"
-
 - name: Create pool
   ansible.builtin.include_tasks:
     file: create_pool.yaml
+  when: pool_operation == "create"
 
-- name: Add nodes to pool
+- name: Update pool
   ansible.builtin.include_tasks:
-    file: add_nodes_to_pool.yaml
-  when: "_pool_result.name is defined and _successfully_created_nodes is defined and _successfully_created_nodes | list | length > 0"
+    file: update_pool.yaml
+  when: pool_operation == "update" or pool_operation == "create"
 
-- name: Create virtual server
+- name: Remove pool
   ansible.builtin.include_tasks:
-    file: create_vs.yaml
+    file: remove_pool.yaml
+  when: pool_operation == "remove"

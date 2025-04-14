@@ -1,0 +1,19 @@
+---
+- name: Remove pool
+  bigip_pool:
+    state: absent
+    name: "{{ pool_name }}"
+    partition: "{{ partition }}"
+    provider:
+      server: "{{ _active_device_address }}"
+      user: "{{ f5_cred.f5_user }}"
+      password: "{{ f5_cred.f5_password }}"
+      server_port: "{{ provider_server_port }}"
+      no_f5_teem: true
+      transport: rest
+      validate_certs: "{{ provider_validate_certs }}"
+  register: _remove_pool_result
+
+- name: Display result of remove pool operation
+  debug:
+    msg: "{{ _remove_pool_result }}"

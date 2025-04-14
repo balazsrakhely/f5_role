@@ -1,0 +1,31 @@
+---
+- name: Validate node operation
+  assert:
+    that:
+      - node_operation is defined
+      - node_operation in ['add', 'remove']
+  when: pool_operation == "update"
+
+- name: Only add node operation is possible if pool is just created
+  ansible.builtin.set_fact:
+    _node_op: "{{ node_operation if pool_operation == 'update' else 'add' }}"
+
+- name: Validate node params
+  assert:
+    that:
+      - item.name is defined
+      - item.name is string
+      - item.address is defined
+      - item.address is string
+  loop: "{{ node_list }}"
+  when: node_list is defined and node_list | list | length > 0
+
+- name: Create nodes
+  ansible.builtin.include_tasks:
+    file: add_nodes_to_pool.yaml
+  when: _node_op == 'add' and node_list is defined and node_list | list | length > 0
+
+- name: Remove nodes
+  ansible.builtin.include_tasks:
+    file: remove_nodes_from_pool.yaml
+  when: _node_op == 'remove' and node_list is defined and node_list | list | length > 0
