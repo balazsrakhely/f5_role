@@ -8,8 +8,8 @@
       user: "{{ f5_cred.f5_user }}"
       password: "{{ f5_cred.f5_password }}"
       server_port: "{{ provider_server_port }}"
-      no_f5_teem: "{{ provider_omit_telemetry }}"
-      transport: "{{ provider_transport }}"
+      no_f5_teem: true
+      transport: rest
       validate_certs: "{{ provider_validate_certs }}"
   register: _device_result
 
