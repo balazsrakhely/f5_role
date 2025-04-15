@@ -7,6 +7,7 @@
     host: "{{ item.address }}"
     name: "{{ item.name }}"
     port: "{{ pool_port }}"
+    preserve_node: true
     provider:
       server: "{{ _active_device_address }}"
       user: "{{ f5_cred.f5_user }}"
