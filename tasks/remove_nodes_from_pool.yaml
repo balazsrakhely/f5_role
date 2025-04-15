@@ -5,7 +5,7 @@
     pool: "{{ pool_name }}"
     partition: "{{ partition }}"
     host: "{{ item.address }}"
-    name: "{{ item.name }}"
+    name: "{{ item.address }}"
     port: "{{ pool_port }}"
     preserve_node: true
     provider:
