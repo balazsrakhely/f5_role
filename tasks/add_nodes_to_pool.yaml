@@ -19,7 +19,7 @@
 
 - name: Display nodes that were already present
   debug:
-    msg: "Node {{ item.item.name }} already present"
+    msg: "Node {{ item.item.address }} already present"
   when: not item.changed
   loop: "{{ _create_node_results.results }}"
 
