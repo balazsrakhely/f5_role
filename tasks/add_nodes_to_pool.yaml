@@ -15,6 +15,7 @@
       validate_certs: "{{ provider_validate_certs }}"
   loop: "{{ node_list }}"
   register: _create_node_results
+  ignore_errors: yes
 
 - name: Display nodes that were already present
   debug:
