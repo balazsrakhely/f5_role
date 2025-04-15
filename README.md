@@ -109,9 +109,8 @@ If 'pool_operation' equals 'remove':
     pool_health_monitor: tcp
     node_list:
         - address: 192.168.10.10
-          name: 192.168.10.10
+          description: "My 'xy' node"
         - address: 192.168.10.11
-          name: mynode
 ```
 
 ```yaml
@@ -143,9 +142,6 @@ If 'pool_operation' equals 'remove':
     pool_port: 443
     node_list:
         - address: 192.168.10.10
-          name: 192.168.10.10
-        - address: 192.168.10.11
-          name: mynode
 ```
 
 ```yaml
@@ -164,7 +160,4 @@ If 'pool_operation' equals 'remove':
     node_operation: remove
     node_list:
         - address: 192.168.10.10
-          name: 192.168.10.10
-        - address: 192.168.10.11
-          name: mynode
 ```

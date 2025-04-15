@@ -13,8 +13,6 @@
 - name: Validate node params
   assert:
     that:
-      - item.name is defined
-      - item.name is string
       - item.address is defined
       - item.address is string
   loop: "{{ node_list }}"
