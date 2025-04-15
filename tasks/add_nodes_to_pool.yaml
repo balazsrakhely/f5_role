@@ -1,25 +1,25 @@
 ---
-- name: Create node
-  bigip_node:
-    host: "{{ item.address }}"
-    name: "{{ item.name }}"
-    partition: "{{ partition }}"
-    provider:
-      server: "{{ _active_device_address }}"
-      user: "{{ f5_cred.f5_user }}"
-      password: "{{ f5_cred.f5_password }}"
-      server_port: "{{ provider_server_port }}"
-      no_f5_teem: true
-      transport: rest
-      validate_certs: "{{ provider_validate_certs }}"
-  loop: "{{ node_list }}"
-  register: _create_node_results
+# - name: Create node
+#   bigip_node:
+#     host: "{{ item.address }}"
+#     name: "{{ item.name }}"
+#     partition: "{{ partition }}"
+#     provider:
+#       server: "{{ _active_device_address }}"
+#       user: "{{ f5_cred.f5_user }}"
+#       password: "{{ f5_cred.f5_password }}"
+#       server_port: "{{ provider_server_port }}"
+#       no_f5_teem: true
+#       transport: rest
+#       validate_certs: "{{ provider_validate_certs }}"
+#   loop: "{{ node_list }}"
+#   register: _create_node_results
 
-- name: Display nodes that were already present
-  debug:
-    msg: "Node {{ item.item.name }} already present"
-  when: not item.changed
-  loop: "{{ _create_node_results.results }}"
+# - name: Display nodes that were already present
+#   debug:
+#     msg: "Node {{ item.item.name }} already present"
+#   when: not item.changed
+#   loop: "{{ _create_node_results.results }}"
 
 - name: Add pool members
   bigip_pool_member:
