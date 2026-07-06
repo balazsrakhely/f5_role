@@ -10,8 +10,8 @@
     preserve_node: true
     provider:
       server: "{{ _active_device_address }}"
-      user: "{{ f5_cred.f5_user }}"
-      password: "{{ f5_cred.f5_password }}"
+      user: "{{ _f5_cred.f5_user }}"
+      password: "{{ _f5_cred.f5_password }}"
       server_port: "{{ provider_server_port }}"
       no_f5_teem: true
       transport: rest

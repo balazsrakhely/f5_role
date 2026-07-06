@@ -8,9 +8,9 @@ Create a pool in F5 (and nodes in it if wanted to)
 
 | Parameter | Type | Flags | Default | Description |
 | --- | --- | --- | --- | --- |
-| f5_cred.f5_user | string | mandatory | | F5 provider user |
-| f5_cred.f5_password | string | mandatory | | F5 provider password |
-| f5_cred.f5_hosts | string | mandatory | | F5 provider hosts (comma separated list, 2 items) |
+| f5_cred.f5_user | string | optional | | F5 provider user. MANDATORY if 'f5_credentials' typed credential is not provided (env vars) |
+| f5_cred.f5_password | string | optional | | F5 provider password. MANDATORY if 'f5_credentials' typed credential is not provided (env vars) |
+| f5_cred.f5_hosts | string | optional | | F5 provider hosts (comma separated list, 2 items). MANDATORY if 'f5_credentials' typed credential is not provided (env vars) |
 | pool_name | string | mandatory | | The name of the pool |
 | pool_operation | string | mandatory | | Specifies what pool operation to do. Can be 'create', 'update' or 'remove' | 
 | provider_server_port | int | optional | 443 | The port the hosts are accessible on |

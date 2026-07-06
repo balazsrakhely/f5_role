@@ -7,15 +7,15 @@
     description: "{{ item.description | default(omit) }}"
     provider:
       server: "{{ _active_device_address }}"
-      user: "{{ f5_cred.f5_user }}"
-      password: "{{ f5_cred.f5_password }}"
+      user: "{{ _f5_cred.f5_user }}"
+      password: "{{ _f5_cred.f5_password }}"
       server_port: "{{ provider_server_port }}"
       no_f5_teem: true
       transport: rest
       validate_certs: "{{ provider_validate_certs }}"
   loop: "{{ node_list }}"
   register: _create_node_results
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: Display nodes that were already present
   debug:
@@ -33,8 +33,8 @@
     port: "{{ pool_port }}"
     provider:
       server: "{{ _active_device_address }}"
-      user: "{{ f5_cred.f5_user }}"
-      password: "{{ f5_cred.f5_password }}"
+      user: "{{ _f5_cred.f5_user }}"
+      password: "{{ _f5_cred.f5_password }}"
       server_port: "{{ provider_server_port }}"
       no_f5_teem: true
       transport: rest

@@ -1,0 +1,57 @@
+---
+- name: Check whether explicit credential vars are fully provided
+  ansible.builtin.set_fact:
+    _param_creds_complete: >-
+      {{ (f5_cred.f5_user | default('') | length > 0) and
+         (f5_cred.f5_password | default('') | length > 0) and
+         (f5_cred.f5_hosts | default('') | length > 0) and
+         ((f5_cred.f5_hosts | split(',') | length) == 2) }}
+
+- name: Retrieve environment variable f5 credentials
+  ansible.builtin.set_fact:
+    _env_creds:
+      f5_user: "{{ lookup('env', 'f5_user') }}"
+      f5_password: "{{ lookup('env', 'f5_password') }}"
+      f5_hosts: "{{ lookup('env', 'f5_hosts') }}"
+
+
+- name: Check whether environment credential vars are fully provided
+  ansible.builtin.set_fact:
+    _env_creds_complete: >-
+      {{ (_env_creds.f5_user | length > 0) and
+         (_env_creds.f5_password | length > 0) and
+         (_env_creds.f5_hosts | length > 0) and 
+         ((_env_creds.f5_hosts | split(',') | length) == 2) }}
+
+- name: Fail when no complete credential method is available
+  ansible.builtin.fail:
+    msg: >-
+      f5 credentials required via explicit variables (f5_cred.f5_user,
+      f5_cred.f5_password, f5_cred.f5_hosts) or environment variables
+      (f5_user, f5_password, f5_hosts). Provide all three for at least one method.
+  when: not _param_creds_complete and not _env_creds_complete
+
+- name: Display chosen credential source
+  ansible.builtin.debug:
+    msg: "Using credentials from {{ _param_creds_complete | ternary('parameters', 'environment variables') }}."
+
+- name: Set final f5 credentials
+  ansible.builtin.set_fact:
+    _f5_cred: "{{ _param_creds_complete | ternary(f5_cred | default({}), _env_creds) }}"
+
+- name: Display input hosts
+  debug:
+    msg: "{{ _f5_cred.f5_hosts.split(',') }}"
+
+- name: Check if pool_name and partition are provided
+  assert:
+    that:
+      - pool_name is defined and pool_name | length > 0
+      - partition is defined and partition | length > 0
+
+- name: Validate pool operation
+  assert:
+    that:
+      - pool_operation is defined
+      - pool_operation in ['create', 'update', 'remove']
+    fail_msg: "pool_operation must be one of: create, update, or remove"
